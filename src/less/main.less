@@ -1,0 +1,76 @@
+@primary-color: #3498db;
+@max-width: 900px;
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0px;
+}
+
+
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 -15px;
+
+  .col {
+    padding: 0 15px;
+    flex: 1;
+    min-width: 200px;
+    max-width: 100%;
+  }
+}
+
+.content {
+  margin: 0 auto;
+  width: 80%;
+  max-width: @max-width;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+// Buttons
+a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: @primary-color;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: darken(@primary-color, 10%);
+  }
+}
+
+.dark {
+  color: #FBFBFB;
+  background-color: rgb(50, 50, 50);
+}
+
+.light {
+  color:rgb(50, 50, 50);
+  background-color: #FBFBFB;
+}
+
+.text-center {
+  text-align: center;
+  margin: 0 auto;
+}
+
+// Shapes
+.squircle {
+  position: relative;
+  border-radius: 25%;
+}
+
+.fl-auto {
+  margin-right: auto;
+}
+
+.footer {
+  .dark();
+  height: 60px;
+  padding: 60px;
+}

@@ -1,0 +1,8 @@
+{
+    "stylesCss": [
+        "./public/styles/main.css"
+    ],
+    "stylesLess": [
+        "./styles/main.less"
+    ]
+}
