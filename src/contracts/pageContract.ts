@@ -6,6 +6,6 @@ export interface PageContract {
   title: string;
   description: string;
   // keywords: string[];
-  buildHead: (h: TagBuilder<HeaderTag>) => void;
-  buildBody: (b: TagBuilder<BodyTag>) => void;
+  buildHead: (h: HeaderTag) => void;
+  buildBody: (b: BodyTag) => void;
 }

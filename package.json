@@ -1,7 +1,7 @@
 {
   "name": "pagets",
-  "version": "0.2.0",
-  "description": "A TypeScript framework that creates static webpages",
+  "version": "0.2.2",
+  "description": "A TypeScript framework for creating static webpages",
   "type": "module",
   "main": "dist/index.js",
   "bin": {

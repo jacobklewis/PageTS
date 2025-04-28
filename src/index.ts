@@ -5,6 +5,7 @@ import { Config } from "./config.js";
 import path from "path";
 import { getCSSClasses } from "./tools/cssTools.js";
 import { Tag } from "./html/tag.js";
+import { PageContract } from "./contracts/pageContract.js";
 
 export { Body } from "./html/body.js";
 export { Head } from "./html/head.js";
@@ -22,41 +23,8 @@ export const buildStatic = async (app: EntryContract) => {
 
   for (const page of app.assemble()) {
     const pagePath = path.join(config.publicDir, page.path, `index.html`);
-    const html = new HTML({ lang: "en" });
-    // Add custom body tags
-    page.buildBody(html.body);
-    // Calculate styles used
-    const cssClasses = getCSSClasses(config);
-    const styleFiles = calculateClassFilesUsed(
-      html.children[0] as Tag,
-      cssClasses
-    );
-    // console.log("Style files used: ", styleFiles);
-    html.head.with((h) => {
-      h.meta.attr("charset", "UTF-8");
-      h.meta
-        .attr("name", "viewport")
-        .attr("content", "width=device-width, initial-scale=1.0");
-      h.meta.attr("name", "description").attr("content", page.description);
-      h.link
-        .attr("rel", "stylesheet")
-        .attr(
-          "href",
-          "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css"
-        );
 
-      for (const file of styleFiles) {
-        // remove prefix from file name
-        console.log(`relative style path: ${pagePath} to ${file}`);
-        const fileName = path.relative(path.dirname(pagePath), file);
-
-        h.link.attr("rel", "stylesheet").attr("href", fileName);
-      }
-      h.title.text(page.title);
-    });
-    // Add add custom head tags
-    page.buildHead(html.head);
-    const htmlStr = html.build();
+    const htmlStr = await buildSinglePage(page, pagePath, config);
     // save to html file using fs
     // check if the directory exists
     if (!existsSync(path.dirname(pagePath))) {
@@ -64,6 +32,52 @@ export const buildStatic = async (app: EntryContract) => {
     }
     writeFileSync(pagePath, htmlStr);
   }
+};
+
+export const buildSinglePage = async (
+  page: PageContract,
+  pagePath: string,
+  config: Config
+) => {
+  const html = new HTML({ lang: "en" });
+  // Add custom body tags
+  html.body.with((b) => {
+    page.buildBody(b);
+  });
+  // Calculate styles used
+  const cssClasses = getCSSClasses(config);
+  const styleFiles = calculateClassFilesUsed(
+    html.children[0] as Tag,
+    cssClasses
+  );
+  // console.log("Style files used: ", styleFiles);
+  html.head.with((h) => {
+    h.meta.attr("charset", "UTF-8");
+    h.meta
+      .attr("name", "viewport")
+      .attr("content", "width=device-width, initial-scale=1.0");
+    h.meta.attr("name", "description").attr("content", page.description);
+    h.link
+      .attr("rel", "stylesheet")
+      .attr(
+        "href",
+        "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css"
+      );
+
+    for (const file of styleFiles) {
+      // remove prefix from file name
+      console.log(`relative style path: ${pagePath} to ${file}`);
+      const fileName = path.relative(path.dirname(pagePath), file);
+
+      h.link.attr("rel", "stylesheet").attr("href", fileName);
+    }
+    h.title.text(page.title);
+  });
+  // Add add custom head tags
+  html.head.with((h) => {
+    page.buildHead(h);
+  });
+  return html.build();
 };
 
 function calculateClassFilesUsed(
