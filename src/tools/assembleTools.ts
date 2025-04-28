@@ -6,8 +6,10 @@ import { existsSync, readFileSync } from "fs";
 import { exec } from "child_process";
 import { analyzeCSS, compileCSS } from "./cssTools.js";
 import { compileTS } from "./compileTools.js";
+import copyfiles from "copyfiles";
 
 export async function assembleProject() {
+  await copyAssets();
   await compileCSS();
   analyzeCSS();
   compileTS();
@@ -48,6 +50,25 @@ export async function assembleProject() {
       return;
     }
     console.log(`Output: ${stdout}`);
+  });
+}
+
+async function copyAssets() {
+  const config = JSON.parse(
+    readFileSync("./pagets-config.json", "utf-8")
+  ) as Config;
+  if (!config.assetsDir) {
+    console.log("No assets directory specified in pagets-config.json");
+    return;
+  }
+  const srcDir = config.assetsDir + "/**/*";
+  const destDir = path.join(config.publicDir);
+  copyfiles([srcDir, destDir], { up: 1 }, (err) => {
+    if (err) {
+      console.error("Error copying assets:", err);
+    } else {
+      console.log("Assets copied successfully!");
+    }
   });
 }
 

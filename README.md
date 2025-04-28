@@ -70,24 +70,24 @@ export const homePage = {
   path: "/",
   title: "Home",
   description: "A Static Website",
-  buildHead: (h: TagBuilder<HeaderTag>) => { /* Only required for custom header tags */ },
-  buildBody: (b: TagBuilder<BodyTag>) => b.with((b) => {
+  buildHead: (h: HeaderTag) => { /* Only required for custom header tags */ },
+  buildBody: (b: BodyTag) => {
         b.div.class("content").with((c) => {
           c.h1.text("Home Page");
         });
-    })
+    }
 } as PageContract;
 
 export const aboutUs = {
   path: "/aboutus",
   title: "About Us",
   description: "A Static Website - About Us",
-  buildHead: (h: TagBuilder<HeaderTag>) => {},
-  buildBody: (b: TagBuilder<BodyTag>) => b.with((b) => {
+  buildHead: (h: HeaderTag) => {},
+  buildBody: (b: BodyTag) => {
       b.div.class("content").with((c) => {
         c.h1.text("About Us");
       });
-    })
+    }
 } as PageContract;
 ```
 

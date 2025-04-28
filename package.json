@@ -1,6 +1,6 @@
 {
   "name": "pagets",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A TypeScript framework for creating static webpages",
   "type": "module",
   "main": "dist/index.js",
@@ -37,6 +37,7 @@
   "license": "MIT",
   "repository": "jacobklewis/PageTS",
   "dependencies": {
+    "copyfiles": "^2.4.1",
     "css-tree": "^3.1.0",
     "express": "^5.1.0",
     "highlight.js": "^11.11.1",
@@ -48,10 +49,10 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@types/express": "^5.0.1",
+    "@types/copyfiles": "^2.4.4",
     "@types/css-tree": "^2.3.10",
+    "@types/express": "^5.0.1",
     "@types/less": "^3.0.8",
-    "@types/node": "^22.14.1",
-    "copyfiles": "^2.4.1"
+    "@types/node": "^22.14.1"
   }
 }

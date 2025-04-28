@@ -56,7 +56,13 @@ export class HeaderTag extends Tag {
   ) {
     super(name, attributes, wrap);
   }
-
+  tag(
+    name: string,
+    attributes: { [key: string]: string } = {},
+    wrap: boolean = true
+  ) {
+    return tagBuilder(this, new BodyTag(name, attributes, wrap));
+  }
   get meta() {
     return tagBuilder(this, new Tag("meta", {}, false));
   }
