@@ -1,6 +1,6 @@
 {
   "name": "pagets",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A TypeScript framework for creating static webpages",
   "type": "module",
   "main": "dist/index.js",

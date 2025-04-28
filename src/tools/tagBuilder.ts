@@ -44,8 +44,12 @@ export class TagBuilder<T extends Tag> {
     this.tag.attributes["style"] = value;
     return this;
   }
-  class(value: PageClasses): TagBuilder<T> {
-    this.tag.attributes["class"] = value;
+  class(...value: PageClasses[]): TagBuilder<T> {
+    if (this.tag.attributes["class"]) {
+      this.tag.attributes["class"] += " " + value.join(" ");
+    } else {
+      this.tag.attributes["class"] = value.join(" ");
+    }
     return this;
   }
   id(value: string): TagBuilder<T> {
