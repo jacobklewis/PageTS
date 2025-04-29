@@ -1,8 +1,5 @@
 {
-    "stylesCss": [
-        "./public/styles/main.css"
-    ],
-    "stylesLess": [
-        "./styles/main.less"
-    ]
+    "publicDir": "./public",
+    "stylesLess": [],
+    "entryFile": "./example/mywebsite.js"
 }

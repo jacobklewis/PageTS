@@ -1,4 +1,7 @@
-@primary-color: #3498db;
+@primary-color: #f5f5f5;
+@primary-dark-color: #252525;
+@primary-text-color: #353535;
+@primary-dark-text-color: #e5e5e5;
 @max-width: 900px;
 
 body {
@@ -11,12 +14,13 @@ body {
 .row {
   display: flex;
   justify-content: space-between;
-  margin: 0 -15px;
+  margin: 0 5px;
 
   .col {
-    padding: 0 15px;
+    padding: 0 5px;
+    display: flex;
     flex: 1;
-    min-width: 200px;
+    min-width: 100px;
     max-width: 100%;
   }
 }
@@ -34,24 +38,71 @@ body {
   display: inline-block;
   padding: 10px 20px;
   background-color: @primary-color;
-  color: #fff;
+  color: @primary-text-color;
   text-decoration: none;
   border-radius: 5px;
+  border: 2px solid transparent;
   transition: background-color 0.3s;
+  text-align: center;
 
   &:hover {
     background-color: darken(@primary-color, 10%);
   }
+  &.dark {
+    background-color: @primary-dark-color;
+    color: @primary-dark-text-color;
+
+    &:hover {
+      background-color: lighten(@primary-dark-color, 10%);
+    }
+  }
+  &.outline {
+    background-color: transparent;
+    border: 2px solid @primary-dark-color;
+    color: @primary-text-color;
+    transition: border 0.3s;
+
+    &:hover {
+      background-color: transparent;
+      border: 2px solid lighten(@primary-dark-color, 40%);
+    }
+    &.dark {
+      border: 2px solid @primary-color;
+      color: @primary-dark-text-color;
+  
+      &:hover {
+        background-color: transparent;
+        border: 2px solid darken(@primary-color, 20%);
+      }
+    }
+  }
+  &.text {
+    background-color: transparent;
+    color: @primary-text-color;
+    transition: color 0.3s;
+
+    &:hover {
+      color: darken(@primary-text-color, 10%);
+    }
+    &.dark {
+      color: @primary-dark-text-color;
+      background-color: transparent;
+
+      &:hover {
+        color: lighten(@primary-dark-text-color, 10%);
+      }
+    }
+  }
 }
 
 .dark {
-  color: #FBFBFB;
-  background-color: rgb(50, 50, 50);
+  color: @primary-dark-text-color;
+  background-color: @primary-dark-color;
 }
 
 .light {
-  color:rgb(50, 50, 50);
-  background-color: #FBFBFB;
+  color:@primary-text-color;
+  background-color: @primary-color;
 }
 
 .text-center {
@@ -73,4 +124,9 @@ body {
   .dark();
   height: 60px;
   padding: 60px;
+}
+
+// Layout
+.spread {
+  width: 100%;
 }

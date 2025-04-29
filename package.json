@@ -1,26 +1,29 @@
 {
   "name": "pagets",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A TypeScript framework for creating static webpages",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "pagets-css": "dist/tools/cssTools.js",
-    "pagets-compile": "dist/tools/compileTools.js",
-    "pagets-assemble": "dist/tools/assembleTools.js",
-    "pagets-serve": "dist/tools/server.js"
+    "pagets-css": "dist/src/tools/cssTools.js",
+    "pagets-compile": "dist/src/tools/compileTools.js",
+    "pagets-assemble": "dist/src/tools/assembleTools.js",
+    "pagets-serve": "dist/src/tools/server.js"
   },
   "files": [
     "dist",
     "README.md"
   ],
   "scripts": {
-    "build:copy-assets": "copyfiles -u 1 'src/less/**/*' dist/",
+    "build:copy-assets": "copyfiles -u 1 'src/less/**/*' dist/src/",
     "build:tsc": "tsc",
-    "build:chmod": "chmod +x dist/tools/cssTools.js && chmod +x dist/tools/assembleTools.js && chmod +x dist/tools/compileTools.js && chmod +x dist/tools/server.js",
+    "build:less": "lessc src/less/main.less design/main.css",
+    "build:chmod": "chmod +x dist/src/tools/cssTools.js && chmod +x dist/src/tools/assembleTools.js && chmod +x dist/src/tools/compileTools.js && chmod +x dist/src/tools/server.js",
     "build:full": "npm run build:copy-assets && npm run build:tsc && npm run build:chmod",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "assemble": "node dist/src/tools/assembleTools.js",
+    "serve": "node dist/src/tools/server.js"
   },
   "keywords": [
     "static",

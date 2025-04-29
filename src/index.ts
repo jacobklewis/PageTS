@@ -15,6 +15,7 @@ export { analyzeCSS } from "./tools/cssTools.js";
 export { TagBuilder } from "./tools/tagBuilder.js";
 export { PageContract } from "./contracts/pageContract.js";
 export { EntryContract } from "./contracts/entryContract.js";
+export { BtnConfig } from "./components/btn.js";
 
 export const buildStatic = async (app: EntryContract) => {
   const config = JSON.parse(

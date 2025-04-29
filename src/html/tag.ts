@@ -1,17 +1,18 @@
+import { BtnConfig, createBtn } from "../components/btn.js";
 import { StringBuilder } from "../tools/stringBuilder.js";
 import { TagBuilder, tagBuilder } from "../tools/tagBuilder.js";
 import { Element } from "./element.js";
 
 export class Tag implements Element {
   name: string;
-  attributes: { [key: string]: string };
+  attributes: { [key: string]: string | undefined };
   wrap: boolean;
   prefix: string;
   children: Element[] = [];
 
   constructor(
     name: string,
-    attributes: { [key: string]: string },
+    attributes: { [key: string]: string | undefined },
     wrap: boolean,
     prefix: string = ""
   ) {
@@ -34,6 +35,9 @@ export class Tag implements Element {
     }
     stringBuilder.append(`<${this.name}`);
     for (const [key, value] of Object.entries(this.attributes)) {
+      if (value === undefined) {
+        continue;
+      }
       stringBuilder.append(` ${key}="${value}"`);
     }
     if (this.children.length === 0 && !this.wrap) {
@@ -77,7 +81,7 @@ export class HeaderTag extends Tag {
 export class BodyTag extends Tag {
   constructor(
     name: string,
-    attributes: { [key: string]: string } = {},
+    attributes: { [key: string]: string | undefined } = {},
     wrap: boolean = true
   ) {
     super(name, attributes, wrap);
@@ -123,5 +127,9 @@ export class BodyTag extends Tag {
   }
   get h6() {
     return tagBuilder(this, new BodyTag("h6", {}, true));
+  }
+  // Components
+  btn(config: Partial<BtnConfig>) {
+    return createBtn(this, config);
   }
 }

@@ -1,1 +1,1 @@
-export type PageClasses = "";
+export type PageClasses = "" | string;
