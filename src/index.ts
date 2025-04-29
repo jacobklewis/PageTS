@@ -76,7 +76,9 @@ export const buildSinglePage = async (
   });
   // Add add custom head tags
   html.head.with((h) => {
-    page.buildHead(h);
+    if (page.buildHead) {
+      page.buildHead(h);
+    }
   });
   return html.build();
 };

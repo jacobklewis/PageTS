@@ -129,6 +129,18 @@ export class BodyTag extends Tag {
     return tagBuilder(this, new BodyTag("h6", {}, true));
   }
   // Components
+  mdFile(source: string) {
+    return tagBuilder(this, new BodyTag("div", {}, true)).mdFile(source);
+  }
+  mdText(text: string) {
+    return tagBuilder(this, new BodyTag("div", {}, true)).mdText(text);
+  }
+  get break() {
+    return tagBuilder(this, new BodyTag("div", { class: "break" }, true));
+  }
+  get content() {
+    return tagBuilder(this, new BodyTag("div", { class: "content" }, true));
+  }
   btn(config: Partial<BtnConfig>) {
     return createBtn(this, config);
   }

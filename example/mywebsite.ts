@@ -4,10 +4,15 @@ const page1 = {
   title: "My Page",
   description: "Sample Description",
   path: "/",
-  buildHead: (h) => {},
   buildBody(b) {
-    b.div.class("content").with((c) => {
-      c.btn({ text: "Hello", to: "https://jacoblewis.me" });
+    b.content.with((c) => {
+      c.btn({ text: "Hello", to: "https://jacoblewis.me", spread: true });
+      c.break;
+      c.btn({ text: "Good Day", to: "https://jacoblewis.me", spread: true });
+      c.btn({ text: "Bye Bye", to: "https://jacoblewis.me", spread: true });
+    });
+    b.content.with((c) => {
+      c.mdText("This is a test of the __markdown__ text component");
     });
   },
 } as PageContract;

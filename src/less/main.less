@@ -11,28 +11,6 @@ body {
 
 
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 5px;
-
-  .col {
-    padding: 0 5px;
-    display: flex;
-    flex: 1;
-    min-width: 100px;
-    max-width: 100%;
-  }
-}
-
-.content {
-  margin: 0 auto;
-  width: 80%;
-  max-width: @max-width;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
 // Buttons
 .btn {
   display: inline-block;
@@ -127,6 +105,32 @@ body {
 }
 
 // Layout
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 5px;
+
+  .col {
+    padding: 0 5px;
+    display: flex;
+    flex: 1;
+    min-width: 100px;
+    max-width: 100%;
+  }
+}
+
+.content {
+  margin: 0 auto;
+  width: 80%;
+  max-width: @max-width;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.break {
+  flex: 0 0 100%;
+}
 .spread {
-  width: 100%;
+  flex: 1;
 }
