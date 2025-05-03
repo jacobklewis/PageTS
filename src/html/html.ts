@@ -19,10 +19,4 @@ export class HTML extends Tag {
   get body() {
     return tagBuilder(this, new Body());
   }
-
-  build(): string {
-    const stringBuilder = new StringBuilder();
-    this.render(stringBuilder);
-    return stringBuilder.toString();
-  }
 }

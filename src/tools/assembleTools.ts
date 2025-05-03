@@ -7,6 +7,10 @@ import { exec } from "child_process";
 import { analyzeCSS, compileCSS } from "./cssTools.js";
 import { compileTS } from "./compileTools.js";
 import copyfiles from "copyfiles";
+import fm from "front-matter";
+import { determineTagType, parseHTML, ProcessConfig } from "./tagParser.js";
+import { Tag } from "../html/tag.js";
+import { assembleBtn } from "./compAssemble/sBtn.js";
 
 export async function assembleProject() {
   await copyAssets();
@@ -30,27 +34,40 @@ export async function assembleProject() {
 
   // Read the contents of tsconfig.json
   const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
-  const outDir = configFile.config.compilerOptions.outDir;
+  // const outDir = configFile.config.compilerOptions.outDir;
   const rootFile = config.entryFile.replace(/(\.ts|\.js)$/, ".js");
-  const fileToEval = path.join(outDir, rootFile);
+  const fileToEval = rootFile; //path.join(outDir, rootFile);
   // check if file exists
   if (!existsSync(fileToEval)) {
     throw new Error(`File ${fileToEval} does not exist.`);
   }
   // Run NPM command to execute the JavaScript file
-  const command = `node ${fileToEval}`;
-  console.log(`Executing command: ${command}`);
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`Stderr: ${stderr}`);
-      return;
-    }
-    console.log(`Output: ${stdout}`);
+  // const command = `node ${fileToEval}`;
+  // console.log(`Executing command: ${command}`);
+  // exec(command, (error, stdout, stderr) => {
+  //   if (error) {
+  //     console.error(`Error: ${error.message}`);
+  //     return;
+  //   }
+  //   if (stderr) {
+  //     console.error(`Stderr: ${stderr}`);
+  //     return;
+  //   }
+  //   console.log(`Output: ${stdout}`);
+  // });
+  const fileData = readFileSync(fileToEval, "utf-8");
+  // Process the file with front-matter
+  const frontMatter = fm<ProcessConfig>(fileData);
+  console.log("Front Matter:", frontMatter.attributes);
+  const parsed = parseHTML({
+    tag: new Tag("root", {}, true),
+    attributes: {},
+    innerHTML: frontMatter.body,
+    processConfig: frontMatter.attributes,
+    next: parseHTML,
+    determineTagType: determineTagType,
   });
+  console.log("Parsed HTML:", parsed.map((x) => x.build()).join(""));
 }
 
 async function copyAssets() {

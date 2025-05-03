@@ -1,5 +1,5 @@
 {
     "publicDir": "./public",
     "stylesLess": [],
-    "entryFile": "./example/mywebsite.js"
+    "entryFile": "./example/mywebsite.html"
 }

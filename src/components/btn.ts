@@ -1,8 +1,16 @@
 import { BodyTag, Tag } from "../html/tag.js";
 import { tagBuilder } from "../tools/tagBuilder.js";
 
-export const createBtn = (parentTag: Tag, config: Partial<BtnConfig>) => {
-  const btn = tagBuilder(parentTag, new BodyTag("a", {}, true));
+export const createBtn = (
+  config: Partial<BtnConfig>,
+  parentTag: Tag | undefined = undefined,
+  existingTag: Tag | undefined = undefined
+) => {
+  const btn = tagBuilder(
+    parentTag,
+    existingTag ? existingTag : new BodyTag("a", {}, true)
+  );
+  btn.tag.name = "a";
   btn.class("btn");
   if (config.text) {
     btn.text(config.text);

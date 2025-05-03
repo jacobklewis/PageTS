@@ -50,6 +50,12 @@ export class Tag implements Element {
     }
     stringBuilder.append(`</${this.name}>\n`);
   }
+
+  build(): string {
+    const stringBuilder = new StringBuilder();
+    this.render(stringBuilder);
+    return stringBuilder.toString();
+  }
 }
 
 export class HeaderTag extends Tag {
@@ -142,6 +148,6 @@ export class BodyTag extends Tag {
     return tagBuilder(this, new BodyTag("div", { class: "content" }, true));
   }
   btn(config: Partial<BtnConfig>) {
-    return createBtn(this, config);
+    return createBtn(config, this);
   }
 }

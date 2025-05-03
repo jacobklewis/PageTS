@@ -1,6 +1,6 @@
 {
   "name": "pagets",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "A TypeScript framework for creating static webpages",
   "type": "module",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
     "pagets-serve": "dist/src/tools/server.js"
   },
   "files": [
-    "dist",
+    "dist/src",
     "README.md"
   ],
   "scripts": {
@@ -23,7 +23,8 @@
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "assemble": "node dist/src/tools/assembleTools.js",
-    "serve": "node dist/src/tools/server.js"
+    "serve": "node dist/src/tools/server.js",
+    "testAssemble": "npm run build:tsc && node dist/src/tools/assembleTools.js"
   },
   "keywords": [
     "static",
@@ -43,6 +44,7 @@
     "copyfiles": "^2.4.1",
     "css-tree": "^3.1.0",
     "express": "^5.1.0",
+    "front-matter": "^4.0.2",
     "highlight.js": "^11.11.1",
     "less": "^4.3.0",
     "less-loader": "^12.2.0",

@@ -1,0 +1,34 @@
+---
+title: My Website
+description: Sample Description
+---
+
+<s-content>
+    <s-btn to="https://jacoblewis.me">Hello</s-btn>
+    <s-break/>
+    <s-btn spread to="https://jacoblewis.me">Good Day</s-btn>
+    <s-btn spread to="https://jacoblewis.me">Bye Bye</s-btn>
+</s-content>
+<s-content>
+    <s-md file="example/markdown.md" />
+</s-content>
+
+<!-- Router -->
+<s-content>
+    <s-router>
+        <s-route path="/" def="pages/home.html"/>
+        <s-route path="/about" def="pages/aboutus.html"/>
+    </s-router>
+</s-content>
+<!-- Lists -->
+<s-for each="item" from="posts" sortBy="-date" take="5">
+    <h4>{{item.title}}</h4>
+    <p>{{item.description}}</p>
+    <s-btn to="{{item.link}}">Read More</s-btn>
+</s-for>
+
+<s-for each="item" from="posts" sortBy="-date" take="5">
+    <h4>{{item.title}}</h4>
+    <p>{{item.description}}</p>
+    <s-btn to="{{item.link}}">Read More</s-btn>
+</s-for>
