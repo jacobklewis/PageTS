@@ -1,12 +1,17 @@
+import { Element } from "../html/element.js";
 import { Tag } from "../html/tag.js";
+import { Text } from "../html/text.js";
 import { assembleBreak } from "./compAssemble/sBreak.js";
 import { assembleBtn } from "./compAssemble/sBtn.js";
 import { assembleContent } from "./compAssemble/sContent.js";
+import { assembleFor } from "./compAssemble/sFor.js";
 import { assembleMD } from "./compAssemble/sMD.js";
+import { tagBuilder } from "./tagBuilder.js";
 
-export function parseHTML(config: TagConfig): Tag[] {
+export function parseHTML(config: TagConfig): Element[] {
+  // console.log("Parsing HTML with config:", config);
   // Create a new Tag object
-  const tags = [] as Tag[];
+  const tags = [] as Element[];
   if (!config.innerHTML) {
     console.error("No innerHTML provided for tag: " + config.tag.name);
     return tags;
@@ -15,7 +20,7 @@ export function parseHTML(config: TagConfig): Tag[] {
   // Use a regular expression to extract the tag name and attributes
   //   const regex = /<([\w-]+)([^>]*)>(.*?)<\/\1>/gs;
   const regex =
-    /(<([\w-]+)\s*([^>]*?)\s*\/>)|(<([\w-]+)\s*([^>]*?)\s*>)(.*?)<\/\5>/gs;
+    /(<!--.*?-->)|(<([\w-]+)\s*([^>]*?)\s*\/>)|(<([\w-]+)\s*([^>]*?)\s*>)(.*?)<\/\6>|([^<]+)/gs;
   //   const match = html.match(regex);
 
   let m = undefined;
@@ -23,20 +28,33 @@ export function parseHTML(config: TagConfig): Tag[] {
     if (m.index === regex.lastIndex) {
       regex.lastIndex++;
     }
-    let isShort = m[2] !== undefined;
+    if (m[1]) {
+      // This is a comment, skip it
+      continue;
+    }
+    // console.log(m[0]);
+    if (m[9]) {
+      // This is plain text, add it to the tag
+      const text = m[9].trim();
+      if (text === "") {
+        continue;
+      }
+      tags.push(new Text(text));
+      continue;
+    }
+    let isShort = m[3] !== undefined;
     // console.log("Is short:", isShort);
 
-    const tagName = isShort ? m[2] : m[5];
+    const tagName = isShort ? m[3] : m[6];
     // console.log("Tag name:", tagName);
-    const attributesString = isShort ? m[3] : m[6];
+    const attributesString = isShort ? m[4] : m[7];
     // console.log("Attributes string:", attributesString);
-    const innerHTML = isShort ? undefined : m[7];
+    const innerHTML = isShort ? undefined : m[8];
     // console.log("Inner HTML:", innerHTML);
     const tag = new Tag(tagName, {}, !isShort);
 
-    // Set the tag name and inner HTML
+    // Set the tag name
     tag.name = tagName;
-    // tag.innerHTML = innerHTML;
 
     // Parse attributes
     const attributes: { [key: string]: string } = {};
@@ -50,6 +68,7 @@ export function parseHTML(config: TagConfig): Tag[] {
       attributes: attributes,
       innerHTML: innerHTML,
       processConfig: config.processConfig,
+      variables: config.variables,
       next: parseHTML,
       determineTagType: config.determineTagType,
     });
@@ -71,13 +90,15 @@ export function determineTagType(tagName: string): (config: TagConfig) => void {
       return assembleBreak;
     case "s-md":
       return assembleMD;
+    case "s-for":
+      return assembleFor;
     default:
       return (config: TagConfig) => {
         // Default processing for unknown tags
         config.tag.attributes = config.attributes;
         if (config.innerHTML) {
           const children = config.next(config);
-          config.tag.children = children;
+          tagBuilder(undefined, config.tag).addChildren(children);
         }
       };
   }
@@ -88,11 +109,13 @@ export interface TagConfig {
   attributes: { [key: string]: string };
   innerHTML: string | undefined;
   processConfig: ProcessConfig;
-  next: (config: TagConfig) => Tag[];
+  variables: { [key: string]: any };
+  next: (config: TagConfig) => Element[];
   determineTagType: (tagName: string) => (config: TagConfig) => void;
 }
 
 export interface ProcessConfig {
   title: string;
   description: string;
+  date: string;
 }

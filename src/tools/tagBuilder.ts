@@ -1,3 +1,4 @@
+import { Element } from "../html/element.js";
 import { Markdown } from "../html/markdown.js";
 import { Tag } from "../html/tag.js";
 import { Text } from "../html/text.js";
@@ -17,7 +18,10 @@ export class TagBuilder<T extends Tag> {
   constructor(tag: T) {
     this.tag = tag;
   }
-  setName(name: string, wrap: boolean | undefined = undefined): TagBuilder<T> {
+  setName(
+    name: HTMLTag | string,
+    wrap: boolean | undefined = undefined
+  ): TagBuilder<T> {
     this.tag.name = name;
     if (wrap !== undefined) {
       this.setWrap(wrap);
@@ -28,7 +32,7 @@ export class TagBuilder<T extends Tag> {
     this.tag.wrap = wrap;
     return this;
   }
-  addChildren(children: Tag[]): TagBuilder<T> {
+  addChildren(children: Element[]): TagBuilder<T> {
     this.tag.children.push(...children);
     return this;
   }
@@ -82,3 +86,22 @@ export class TagBuilder<T extends Tag> {
     return this;
   }
 }
+
+export type HTMLTag =
+  | "div"
+  | "span"
+  | "p"
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "ul"
+  | "ol"
+  | "li"
+  | "a"
+  | "img"
+  | "button"
+  | "input"
+  | "textarea";

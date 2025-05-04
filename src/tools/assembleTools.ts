@@ -11,6 +11,7 @@ import fm from "front-matter";
 import { determineTagType, parseHTML, ProcessConfig } from "./tagParser.js";
 import { Tag } from "../html/tag.js";
 import { assembleBtn } from "./compAssemble/sBtn.js";
+import { tagBuilder } from "./tagBuilder.js";
 
 export async function assembleProject() {
   await copyAssets();
@@ -64,10 +65,14 @@ export async function assembleProject() {
     attributes: {},
     innerHTML: frontMatter.body,
     processConfig: frontMatter.attributes,
+    variables: {},
     next: parseHTML,
     determineTagType: determineTagType,
   });
-  console.log("Parsed HTML:", parsed.map((x) => x.build()).join(""));
+  const bodyHTML = tagBuilder(undefined, new Tag("body", {}, true)).addChildren(
+    parsed
+  );
+  console.log("Parsed HTML:", bodyHTML.build());
 }
 
 async function copyAssets() {

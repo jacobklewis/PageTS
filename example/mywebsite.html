@@ -2,11 +2,12 @@
 title: My Website
 description: Sample Description
 ---
-
 <s-content>
     <s-btn to="https://jacoblewis.me">Hello</s-btn>
     <s-break/>
+    Something Here
     <s-btn spread to="https://jacoblewis.me">Good Day</s-btn>
+    And here
     <s-btn spread to="https://jacoblewis.me">Bye Bye</s-btn>
 </s-content>
 <s-content>
@@ -21,13 +22,7 @@ description: Sample Description
     </s-router>
 </s-content>
 <!-- Lists -->
-<s-for each="item" from="posts" sortBy="-date" take="5">
-    <h4>{{item.title}}</h4>
-    <p>{{item.description}}</p>
-    <s-btn to="{{item.link}}">Read More</s-btn>
-</s-for>
-
-<s-for each="item" from="posts" sortBy="-date" take="5">
+<s-for each="item" from="example/posts" sortBy="-date" take="5">
     <h4>{{item.title}}</h4>
     <p>{{item.description}}</p>
     <s-btn to="{{item.link}}">Read More</s-btn>
