@@ -14,7 +14,7 @@ export const assembleBtn = (c: TagConfig) => {
       target: c.attributes["target"] as "_self" | "_blank" | "_parent" | "_top",
       theme: c.attributes["theme"] as "light" | "dark",
       color: c.attributes["color"],
-      style: c.attributes["style"] as "solid" | "outline" | "text",
+      style: c.attributes["disp"] as "solid" | "outline" | "text",
       spread: c.attributes["spread"] !== undefined,
     },
     undefined,

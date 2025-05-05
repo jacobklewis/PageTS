@@ -42,6 +42,7 @@ export const buildSinglePage = (
   renderTags: string[] = [],
   shouldSaveToFile: boolean = false
 ) => {
+  console.log("Building page " + page.title + " with tags: ", renderTags);
   const html = new HTML({ lang: "en" });
   // Add custom body tags
   html.body.with((b) => {
@@ -82,7 +83,7 @@ export const buildSinglePage = (
       page.buildHead(h);
     }
   });
-  const htmlStr = html.body.build({ renderTags });
+  const htmlStr = html.build({ renderTags });
   if (shouldSaveToFile) {
     // check if the directory exists
     if (!existsSync(path.dirname(pagePath))) {

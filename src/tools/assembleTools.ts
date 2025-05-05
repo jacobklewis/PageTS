@@ -61,7 +61,7 @@ export async function assembleProject() {
   // Process the file with front-matter
   const frontMatter = fm<ProcessConfig>(fileData);
   console.log("Front Matter:", frontMatter.attributes);
-  const parsed = parseHTML({
+  const parsedChildren = parseHTML({
     tag: new Tag("root", {}, true),
     attributes: {},
     innerHTML: frontMatter.body,
@@ -71,10 +71,14 @@ export async function assembleProject() {
     determineTagType: determineTagType,
   });
   const bodyHTML = tagBuilder(undefined, new Tag("body", {}, true)).addChildren(
-    parsed
+    parsedChildren
   );
   const tagsToRender = bodyHTML.determineRenderTags();
   for (const tag of tagsToRender) {
+    // TODO:
+    // 1. add title/description to tag metadata
+    // 2. add navbar component for router
+
     const pagePath = path.join(
       config.publicDir,
       tag.replace("root", ""),
@@ -86,7 +90,7 @@ export async function assembleProject() {
         description: frontMatter.attributes.description,
         path: "/",
         buildBody(b) {
-          b.children = bodyHTML.tag.children;
+          b.children = parsedChildren;
         },
         buildHead(h) {},
       },
