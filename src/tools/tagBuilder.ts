@@ -1,4 +1,4 @@
-import { Element } from "../html/element.js";
+import { Element, ElementRenderOptions } from "../html/element.js";
 import { Markdown } from "../html/markdown.js";
 import { Tag } from "../html/tag.js";
 import { Text } from "../html/text.js";
@@ -32,6 +32,10 @@ export class TagBuilder<T extends Tag> {
     this.tag.wrap = wrap;
     return this;
   }
+  setRenderTags(renderTags: string[]): TagBuilder<T> {
+    this.tag.renderTags = renderTags;
+    return this;
+  }
   addChildren(children: Element[]): TagBuilder<T> {
     this.tag.children.push(...children);
     return this;
@@ -41,20 +45,38 @@ export class TagBuilder<T extends Tag> {
     block(this.tag);
     return this;
   }
-  build(): string {
-    return this.tag.build();
+  build(options: ElementRenderOptions): string {
+    return this.tag.build(options);
+  }
+  determineRenderTags(): string[] {
+    // Search tree for all renderTags
+    const renderTags: Set<string> = new Set();
+    renderTags.add("root/");
+    const searchTree = (tag: Tag) => {
+      if (tag.renderTags && tag.renderTags.length > 1) {
+        renderTags.add(tag.renderTags.join("/"));
+      }
+      tag.children.forEach((child) => {
+        if (child instanceof Tag) {
+          searchTree(child);
+        }
+      });
+    };
+    searchTree(this.tag);
+    console.log("Render Tags:", renderTags);
+    return Array.from(renderTags);
   }
   // Content additions
-  text(value: string): TagBuilder<T> {
-    this.tag.children.push(new Text(value));
+  text(value: string, renderTags: string[] = []): TagBuilder<T> {
+    this.tag.children.push(new Text(value, renderTags));
     return this;
   }
-  mdFile(source: string): TagBuilder<T> {
-    this.tag.children.push(new Markdown(source));
+  mdFile(source: string, renderTags: string[] = []): TagBuilder<T> {
+    this.tag.children.push(new Markdown(source, false, renderTags));
     return this;
   }
-  mdText(text: string): TagBuilder<T> {
-    this.tag.children.push(new Markdown(text, true));
+  mdText(text: string, renderTags: string[] = []): TagBuilder<T> {
+    this.tag.children.push(new Markdown(text, true, renderTags));
     return this;
   }
   // add attribute

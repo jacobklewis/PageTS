@@ -12,6 +12,7 @@ import { determineTagType, parseHTML, ProcessConfig } from "./tagParser.js";
 import { Tag } from "../html/tag.js";
 import { assembleBtn } from "./compAssemble/sBtn.js";
 import { tagBuilder } from "./tagBuilder.js";
+import { buildSinglePage } from "../index.js";
 
 export async function assembleProject() {
   await copyAssets();
@@ -64,7 +65,7 @@ export async function assembleProject() {
     tag: new Tag("root", {}, true),
     attributes: {},
     innerHTML: frontMatter.body,
-    processConfig: frontMatter.attributes,
+    processConfig: { ...frontMatter.attributes, renderTags: ["root"] },
     variables: {},
     next: parseHTML,
     determineTagType: determineTagType,
@@ -72,7 +73,30 @@ export async function assembleProject() {
   const bodyHTML = tagBuilder(undefined, new Tag("body", {}, true)).addChildren(
     parsed
   );
-  console.log("Parsed HTML:", bodyHTML.build());
+  const tagsToRender = bodyHTML.determineRenderTags();
+  for (const tag of tagsToRender) {
+    const pagePath = path.join(
+      config.publicDir,
+      tag.replace("root", ""),
+      `index.html`
+    );
+    buildSinglePage(
+      {
+        title: frontMatter.attributes.title,
+        description: frontMatter.attributes.description,
+        path: "/",
+        buildBody(b) {
+          b.children = bodyHTML.tag.children;
+        },
+        buildHead(h) {},
+      },
+      pagePath,
+      config,
+      tag.split("/"),
+      true
+    );
+  }
+  // console.log("Parsed HTML:", bodyHTML.build({ renderTags: ["root", ""] }));
 }
 
 async function copyAssets() {

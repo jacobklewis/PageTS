@@ -25,7 +25,7 @@ export const buildStatic = async (app: EntryContract) => {
   for (const page of app.assemble()) {
     const pagePath = path.join(config.publicDir, page.path, `index.html`);
 
-    const htmlStr = await buildSinglePage(page, pagePath, config);
+    const htmlStr = buildSinglePage(page, pagePath, config);
     // save to html file using fs
     // check if the directory exists
     if (!existsSync(path.dirname(pagePath))) {
@@ -35,10 +35,12 @@ export const buildStatic = async (app: EntryContract) => {
   }
 };
 
-export const buildSinglePage = async (
+export const buildSinglePage = (
   page: PageContract,
   pagePath: string,
-  config: Config
+  config: Config,
+  renderTags: string[] = [],
+  shouldSaveToFile: boolean = false
 ) => {
   const html = new HTML({ lang: "en" });
   // Add custom body tags
@@ -80,7 +82,15 @@ export const buildSinglePage = async (
       page.buildHead(h);
     }
   });
-  return html.build();
+  const htmlStr = html.body.build({ renderTags });
+  if (shouldSaveToFile) {
+    // check if the directory exists
+    if (!existsSync(path.dirname(pagePath))) {
+      mkdirSync(path.dirname(pagePath), { recursive: true });
+    }
+    writeFileSync(pagePath, htmlStr);
+  }
+  return htmlStr;
 };
 
 function calculateClassFilesUsed(

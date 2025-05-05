@@ -6,6 +6,7 @@ import { assembleBtn } from "./compAssemble/sBtn.js";
 import { assembleContent } from "./compAssemble/sContent.js";
 import { assembleFor } from "./compAssemble/sFor.js";
 import { assembleMD } from "./compAssemble/sMD.js";
+import { assembleRouter } from "./compAssemble/sRouter.js";
 import { tagBuilder } from "./tagBuilder.js";
 
 export function parseHTML(config: TagConfig): Element[] {
@@ -55,6 +56,8 @@ export function parseHTML(config: TagConfig): Element[] {
 
     // Set the tag name
     tag.name = tagName;
+    // Set the render tag type
+    tag.renderTags = config.processConfig.renderTags;
 
     // Parse attributes
     const attributes: { [key: string]: string } = {};
@@ -92,6 +95,8 @@ export function determineTagType(tagName: string): (config: TagConfig) => void {
       return assembleMD;
     case "s-for":
       return assembleFor;
+    case "s-router":
+      return assembleRouter;
     default:
       return (config: TagConfig) => {
         // Default processing for unknown tags
@@ -118,4 +123,5 @@ export interface ProcessConfig {
   title: string;
   description: string;
   date: string;
+  renderTags: string[];
 }

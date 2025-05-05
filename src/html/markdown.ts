@@ -1,12 +1,25 @@
 import { marked } from "../tools/marked.js";
 import { StringBuilder } from "../tools/stringBuilder.js";
-import { Element } from "./element.js";
+import { Element, ElementRenderOptions } from "./element.js";
 import { readFileSync, existsSync } from "fs";
 
 export class Markdown implements Element {
-  constructor(public source: string, public parseDirectly: boolean = false) {}
+  constructor(
+    public source: string,
+    public parseDirectly: boolean = false,
+    public renderTags: string[] = []
+  ) {}
 
-  render(stringBuilder: StringBuilder) {
+  render(stringBuilder: StringBuilder, options: ElementRenderOptions): void {
+    // Only render if the all render tags are in the options
+    if (this.renderTags.length > 0) {
+      for (const tag of this.renderTags) {
+        if (!options.renderTags.includes(tag)) {
+          return;
+        }
+      }
+    }
+    // Continue
     if (this.parseDirectly) {
       stringBuilder.append(marked.parse(this.source, { async: false }));
       return;

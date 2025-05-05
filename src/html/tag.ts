@@ -1,7 +1,7 @@
 import { BtnConfig, createBtn } from "../components/btn.js";
 import { StringBuilder } from "../tools/stringBuilder.js";
 import { TagBuilder, tagBuilder } from "../tools/tagBuilder.js";
-import { Element } from "./element.js";
+import { Element, ElementRenderOptions } from "./element.js";
 
 export class Tag implements Element {
   name: string;
@@ -9,6 +9,7 @@ export class Tag implements Element {
   wrap: boolean;
   prefix: string;
   children: Element[] = [];
+  renderTags: string[] = [];
 
   constructor(
     name: string,
@@ -29,7 +30,16 @@ export class Tag implements Element {
     }
     return tag;
   }
-  render(stringBuilder: StringBuilder): void {
+  render(stringBuilder: StringBuilder, options: ElementRenderOptions): void {
+    // Only render if the all render tags are in the options
+    if (this.renderTags.length > 0) {
+      for (const tag of this.renderTags) {
+        if (!options.renderTags.includes(tag)) {
+          return;
+        }
+      }
+    }
+    // Continue
     if (this.prefix && this.prefix.length > 0) {
       stringBuilder.append(`${this.prefix}\n`);
     }
@@ -46,14 +56,14 @@ export class Tag implements Element {
     }
     stringBuilder.append(`>`);
     for (const child of this.children) {
-      child.render(stringBuilder);
+      child.render(stringBuilder, options);
     }
     stringBuilder.append(`</${this.name}>\n`);
   }
 
-  build(): string {
+  build(options: ElementRenderOptions): string {
     const stringBuilder = new StringBuilder();
-    this.render(stringBuilder);
+    this.render(stringBuilder, options);
     return stringBuilder.toString();
   }
 }
