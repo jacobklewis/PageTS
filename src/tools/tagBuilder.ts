@@ -42,6 +42,12 @@ export class TagBuilder<T extends Tag> {
     this.tag.children.push(...children);
     return this;
   }
+  addRenderScript(
+    script: (renderTags: string[], tag: Tag) => void
+  ): TagBuilder<T> {
+    this.tag.renderScripts.push(script);
+    return this;
+  }
   // invoke function
   with(block: (tag: T) => void): TagBuilder<T> {
     block(this.tag);
@@ -128,6 +134,17 @@ export class TagBuilder<T extends Tag> {
       this.tag.attributes["class"] += " " + value.join(" ");
     } else {
       this.tag.attributes["class"] = value.join(" ");
+    }
+    return this;
+  }
+  removeClass(value: string): TagBuilder<T> {
+    if (this.tag.attributes["class"]) {
+      const classes = this.tag.attributes["class"].split(" ");
+      const index = classes.indexOf(value);
+      if (index > -1) {
+        classes.splice(index, 1);
+      }
+      this.tag.attributes["class"] = classes.join(" ");
     }
     return this;
   }

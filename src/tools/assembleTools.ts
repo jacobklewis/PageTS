@@ -79,9 +79,6 @@ export async function assembleProject() {
   const renderTagAttributes = bodyHTML.determineRenderTagAttributes();
   for (const tag of tagsToRender) {
     console.log("Rendering tag:", tag);
-    // TODO:
-    // 1. add title/description to tag metadata
-    // 2. add navbar component for router
     const attrsToRender = renderTagAttributes[tag];
 
     const pagePath = path.join(

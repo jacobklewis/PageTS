@@ -1,6 +1,6 @@
 import { BtnConfig, createBtn } from "../components/btn.js";
 import { StringBuilder } from "../tools/stringBuilder.js";
-import { TagBuilder, tagBuilder } from "../tools/tagBuilder.js";
+import { tagBuilder } from "../tools/tagBuilder.js";
 import { ProcessConfig } from "../tools/tagParser.js";
 import { Element, ElementRenderOptions } from "./element.js";
 
@@ -14,6 +14,7 @@ export class Tag implements Element {
   renderTagAttributes: {
     [key: string]: ProcessConfig;
   } = {};
+  renderScripts: ((renderTags: string[], tag: Tag) => void)[] = [];
 
   constructor(
     name: string,
@@ -42,6 +43,10 @@ export class Tag implements Element {
           return;
         }
       }
+    }
+    // Render scripts
+    for (const renderScript of this.renderScripts) {
+      renderScript(options.renderTags, this);
     }
     // Continue
     if (this.prefix && this.prefix.length > 0) {

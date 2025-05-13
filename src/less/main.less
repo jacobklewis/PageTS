@@ -23,6 +23,10 @@ body {
   transition: background-color 0.3s;
   text-align: center;
 
+  &.active {
+    background-color: darken(@primary-color, 10%);
+  }
+
   &:hover {
     background-color: darken(@primary-color, 10%);
   }
@@ -30,6 +34,9 @@ body {
     background-color: @primary-dark-color;
     color: @primary-dark-text-color;
 
+    &.active {
+      background-color: lighten(@primary-dark-color, 10%);
+    }
     &:hover {
       background-color: lighten(@primary-dark-color, 10%);
     }
@@ -39,7 +46,9 @@ body {
     border: 2px solid @primary-dark-color;
     color: @primary-text-color;
     transition: border 0.3s;
-
+    &.active {
+      border: 2px solid lighten(@primary-dark-color, 40%);
+    }
     &:hover {
       background-color: transparent;
       border: 2px solid lighten(@primary-dark-color, 40%);
@@ -59,6 +68,9 @@ body {
     color: @primary-text-color;
     transition: color 0.3s;
 
+    &.active {
+      color: darken(@primary-text-color, 10%);
+    }
     &:hover {
       color: darken(@primary-text-color, 10%);
     }

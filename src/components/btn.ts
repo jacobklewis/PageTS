@@ -33,6 +33,15 @@ export const createBtn = (
   if (config.style === "outline" || config.style === "text") {
     btn.class(config.style);
   }
+  btn.addRenderScript((renderTags, tag) => {
+    const toTarget = config.to;
+    const meTarget = renderTags.join("/").replace("root", "");
+    if (toTarget === meTarget) {
+      tagBuilder(undefined, tag).class("active");
+    } else {
+      tagBuilder(undefined, tag).removeClass("active");
+    }
+  });
   return btn;
 };
 
