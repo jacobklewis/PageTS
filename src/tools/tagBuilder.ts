@@ -1,8 +1,10 @@
+import { render } from "less";
 import { Element, ElementRenderOptions } from "../html/element.js";
 import { Markdown } from "../html/markdown.js";
 import { Tag } from "../html/tag.js";
 import { Text } from "../html/text.js";
 import { PageClasses } from "./cssClasses.js";
+import { ProcessConfig } from "./tagParser.js";
 
 export const tagBuilder = <T extends Tag>(
   parent: Tag | undefined,
@@ -65,6 +67,32 @@ export class TagBuilder<T extends Tag> {
     searchTree(this.tag);
     console.log("Render Tags:", renderTags);
     return Array.from(renderTags);
+  }
+  determineRenderTagAttributes(): {
+    [key: string]: ProcessConfig;
+  } {
+    // Search tree for all renderTags
+    const renderTagAttrs: {
+      [key: string]: ProcessConfig;
+    } = {};
+    const searchTree = (tag: Tag) => {
+      if (tag.renderTagAttributes) {
+        for (const renderTagAttr of Object.keys(tag.renderTagAttributes)) {
+          if (renderTagAttr && renderTagAttr.length > 0) {
+            renderTagAttrs[renderTagAttr] =
+              tag.renderTagAttributes[renderTagAttr];
+          }
+        }
+      }
+      tag.children.forEach((child) => {
+        if (child instanceof Tag) {
+          searchTree(child);
+        }
+      });
+    };
+    searchTree(this.tag);
+    console.log("Render Tag Attrs:", renderTagAttrs);
+    return renderTagAttrs;
   }
   // Content additions
   text(value: string, renderTags: string[] = []): TagBuilder<T> {

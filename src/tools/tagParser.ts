@@ -122,6 +122,6 @@ export interface TagConfig {
 export interface ProcessConfig {
   title: string;
   description: string;
-  date: string;
+  date: string | undefined;
   renderTags: string[];
 }

@@ -25,18 +25,21 @@ export const assembleRouter = (c: TagConfig) => {
       // Process the file with front-matter
       const frontMatter = fm<ProcessConfig>(fileData);
       console.log("Route Front Matter:", frontMatter.attributes);
+      const newRenderTags = [...c.processConfig.renderTags, newPath];
       const parsedChildren = c.next({
         tag: new Tag("newPath", {}, true),
         attributes: {},
         innerHTML: frontMatter.body,
         processConfig: {
           ...frontMatter.attributes,
-          renderTags: [...c.processConfig.renderTags, newPath],
+          renderTags: newRenderTags,
         },
         variables: {},
         next: c.next,
         determineTagType: c.determineTagType,
       });
+      tb.tag.renderTagAttributes[newRenderTags.join("/")] =
+        frontMatter.attributes;
       // console.log("Parsed HTML nodes:", parsedChildren);
       tb.addChildren(parsedChildren);
       // console.log("tb", tb.tag);

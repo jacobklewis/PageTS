@@ -73,11 +73,16 @@ export async function assembleProject() {
   const bodyHTML = tagBuilder(undefined, new Tag("body", {}, true)).addChildren(
     parsedChildren
   );
+  bodyHTML.tag.renderTags = ["root/"];
+  bodyHTML.tag.renderTagAttributes["root/"] = frontMatter.attributes;
   const tagsToRender = bodyHTML.determineRenderTags();
+  const renderTagAttributes = bodyHTML.determineRenderTagAttributes();
   for (const tag of tagsToRender) {
+    console.log("Rendering tag:", tag);
     // TODO:
     // 1. add title/description to tag metadata
     // 2. add navbar component for router
+    const attrsToRender = renderTagAttributes[tag];
 
     const pagePath = path.join(
       config.publicDir,
@@ -86,8 +91,8 @@ export async function assembleProject() {
     );
     buildSinglePage(
       {
-        title: frontMatter.attributes.title,
-        description: frontMatter.attributes.description,
+        title: attrsToRender.title,
+        description: attrsToRender.description,
         path: "/",
         buildBody(b) {
           b.children = parsedChildren;
