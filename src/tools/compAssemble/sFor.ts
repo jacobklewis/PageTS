@@ -15,6 +15,7 @@ export const assembleFor = (c: TagConfig) => {
   }
   const fEach = c.attributes["each"];
   const fFrom = c.attributes["from"];
+  const fPath = c.attributes["path"] ?? fFrom;
   const fSortBy = c.attributes["sortBy"] ?? "";
   const fTake = parseInt(c.attributes["take"] ?? "100");
   const fSkip = parseInt(c.attributes["skip"] ?? "0");
@@ -23,13 +24,13 @@ export const assembleFor = (c: TagConfig) => {
     throw new Error(`File ${fFrom} does not exist`);
   }
   const files = readdirSync(fFrom, "utf-8");
-  const fmFileAttrs = [] as ProcessConfig[];
+  const fmFileAttrs = [] as { name: string; attrs: ProcessConfig }[];
   for (const file of files) {
     if (file.endsWith(".md")) {
       const filePath = `${fFrom}/${file}`;
       const fileData = readFileSync(filePath, "utf-8");
       const frontMatter = fm<ProcessConfig>(fileData);
-      fmFileAttrs.push(frontMatter.attributes);
+      fmFileAttrs.push({ name: file, attrs: frontMatter.attributes });
     }
   }
   // Sort the attributes if sortBy is provided
@@ -49,9 +50,9 @@ export const assembleFor = (c: TagConfig) => {
       new RegExp(`{{${fEach}\\.(\\w+)}}`, "g"),
       (match, key: string) => {
         if (key == "link") {
-          return "test";
+          return `/${fPath}/${item.name.replace(".md", "")}`;
         }
-        return (item as Record<string, any>)[key] ?? "";
+        return (item.attrs as Record<string, any>)[key] ?? "";
       }
     );
     console.log("Agumented InnerHTML:", agumentedInnerHTML);

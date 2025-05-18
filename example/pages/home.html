@@ -4,7 +4,7 @@ description: Sample Description
 ---
 <h3>This is Home</h3>
 <!-- Lists -->
-<s-for each="item" from="example/posts" sortBy="-date" take="5">
+<s-for each="item" from="example/posts" path="blog" sortBy="-date" take="5">
     <h4>{{item.title}}</h4>
     <p>{{item.description}}</p>
     <s-btn to="{{item.link}}">Read More</s-btn>

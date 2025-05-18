@@ -3,24 +3,21 @@ title: My Website
 description: Sample Description
 ---
 <s-content>
-    <s-btn spread disp="outline" to="https://jacoblewis.me">Hello</s-btn>
-    <s-break/>
     <s-btn spread to="/">Home</s-btn>
     <s-btn spread to="/about">About</s-btn>
+    <s-btn spread to="/blog">Blog</s-btn>
 </s-content>
+
 <s-content>
     <s-md file="example/markdown.md" />
 </s-content>
 
 <!-- Router -->
 <s-content>
-    <!-- <s-nav router="myRouter">
-        <s-nav-item to="/">Home</s-nav-item>
-        <s-nav-item to="/about">About Us</s-nav-item>
-    </s-nav> -->
-    <s-router id="myRouter">
+    <s-router>
         <s-route path="/" file="example/pages/home.html"/>
         <s-route path="/about" file="example/pages/aboutus.html"/>
+        <s-route path="/blog" file="example/pages/blog.html"/>
     </s-router>
 </s-content>
 

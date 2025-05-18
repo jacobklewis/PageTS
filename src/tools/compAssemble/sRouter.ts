@@ -1,12 +1,19 @@
-import { readFileSync } from "fs";
+import { readdirSync, readFileSync } from "fs";
 import { Tag } from "../../html/tag.js";
-import { tagBuilder } from "../tagBuilder.js";
+import { TagBuilder, tagBuilder } from "../tagBuilder.js";
 import { ProcessConfig, TagConfig } from "../tagParser.js";
 import fm from "front-matter";
 
 export const assembleRouter = (c: TagConfig) => {
   const tb = tagBuilder(undefined, c.tag).setName("div", true);
-  // get children
+  if (!c.attributes["from"]) {
+    // get children
+    processRouterChildren(c, tb);
+  } else {
+    processRouterFolder(c, tb);
+  }
+};
+function processRouterChildren(c: TagConfig, tb: TagBuilder<Tag>) {
   const children = c.next(c);
   children.forEach((child) => {
     const tag = child as Tag;
@@ -40,9 +47,36 @@ export const assembleRouter = (c: TagConfig) => {
       });
       tb.tag.renderTagAttributes[newRenderTags.join("/")] =
         frontMatter.attributes;
-      // console.log("Parsed HTML nodes:", parsedChildren);
       tb.addChildren(parsedChildren);
-      // console.log("tb", tb.tag);
     }
   });
-};
+}
+
+function processRouterFolder(c: TagConfig, tb: TagBuilder<Tag>) {
+  console.log("Processing router folder");
+  const fFrom = c.attributes["from"];
+  if (!fFrom) {
+    console.error("s-router: Missing 'from' attribute");
+    throw new Error("s-router: Missing 'from' attribute");
+  }
+  const files = readdirSync(fFrom, "utf-8");
+  for (const file of files) {
+    if (file.endsWith(".md")) {
+      console.log("Processing file:", file);
+      const filePath = `${fFrom}/${file}`;
+      const fileData = readFileSync(filePath, "utf-8");
+      const frontMatter = fm<ProcessConfig>(fileData);
+      const newRenderTags = [
+        ...c.processConfig.renderTags,
+        file.replace(".md", ""),
+      ];
+      tb.tag.renderTagAttributes[newRenderTags.join("/")] =
+        frontMatter.attributes;
+      const md = tagBuilder(undefined, new Tag("div", {}, true)).mdText(
+        frontMatter.body
+      );
+      md.tag.renderTags = newRenderTags;
+      tb.addChildren([md.tag]);
+    }
+  }
+}
